@@ -18,7 +18,6 @@ export default function TodoForm({ fetchData }: TodoFormProps) {
       id: Date.now().toString(),
       title,
       contents,
-      isCompleted: false,
       createdAt: Date.now(),
     });
     await fetchData();
