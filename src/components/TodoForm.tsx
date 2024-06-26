@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { todoApi } from "../api/todos";
 
-export default function TodoForm({ fetchData }) {
-  const [title, setTitle] = useState("");
-  const [contents, setContents] = useState("");
-  const handleAddTodo = async (e) => {
+interface TodoFormProps {
+  fetchData: () => Promise<void>;
+}
+
+export default function TodoForm({ fetchData }: TodoFormProps) {
+  const [title, setTitle] = useState<string>("");
+  const [contents, setContents] = useState<string>("");
+  const handleAddTodo: React.FormEventHandler<HTMLFormElement> = async (
+    e,
+  ): Promise<void> => {
     e.preventDefault();
     setTitle("");
     setContents("");
@@ -17,6 +23,9 @@ export default function TodoForm({ fetchData }) {
     });
     await fetchData();
   };
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setTitle(e.target.value);
+  };
 
   return (
     <form onSubmit={handleAddTodo}>
@@ -26,7 +35,7 @@ export default function TodoForm({ fetchData }) {
         id="title"
         name="title"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={handleTitleChange}
         required
       />
       <label htmlFor="contents">내용:</label>

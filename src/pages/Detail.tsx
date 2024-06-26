@@ -2,22 +2,28 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { todoApi } from "../api/todos";
+import { AxiosError } from "axios";
+import { TodoWithIsDone } from "../types/todo.type";
 
 export default function Detail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<AxiosError | null>(null);
+  const [data, setData] = useState<TodoWithIsDone | null>(null);
 
   useEffect(() => {
-    const fetchDetail = async () => {
+    const fetchDetail = async (): Promise<void> => {
       try {
         const response = await todoApi(`/todos/${id}`);
         setData(response.data);
       } catch (err) {
-        setError(err);
+        if (err instanceof AxiosError) {
+          setError(err);
+        } else {
+          console.error(err);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -26,7 +32,7 @@ export default function Detail() {
     fetchDetail();
   }, [id]);
 
-  if (isLoading) return <div style={{ fontSize: 36 }}>로딩중...</div>;
+  if (isLoading || !data) return <div style={{ fontSize: 36 }}>로딩중...</div>;
   if (error) {
     console.error(error);
     return (
