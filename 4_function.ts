@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 // 함수 선언문에서의 타입 지정
 function greet(name: string): string {
@@ -12,6 +12,7 @@ function add(a: number, b: number): number {
 function printName(name: string): void {
   // void 타입, 반환 값이 없음
   console.log(name);
+  ``;
 }
 
 // 화살표 함수에서의 타입 지정
@@ -29,16 +30,16 @@ const logMessage3 = (message: string): void => {
 };
 
 // async 함수에서의 타입 지정
-// type Todo = {
-//   userId: number;
-//   id: number;
-//   title: string;
-//   completed: boolean;
-// };
+type Todo = {
+  userId: number;
+  id: number;
+  title: string;
+  completed: boolean;
+};
 // TODO: 함수 타입 정의할 것
-const getTodos = async () => {
-  const response = await axios.get(
-    "https://jsonplaceholder.typicode.com/todos/1",
+const getTodos = async (): Promise<Todo> => {
+  const response = await axios.get<Todo>(
+    "https://jsonplaceholder.typicode.com/todos/1"
   );
   return response.data;
 };
